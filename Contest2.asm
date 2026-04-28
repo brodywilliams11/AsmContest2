@@ -4,6 +4,9 @@ INCLUDE Irvine32.inc
 rulesMsg BYTE "Press SPACE to spin ($10) or E to exit ",0
 balanceMsg BYTE "Current Balance: $",0
 outOfMoneyMsg BYTE "You are out of money! Game Over.", 0
+symbolList BYTE "AKQJT"
+spinRandom BYTE 5 DUP(?)
+spinResult BYTE 5 DUP(?)
 balance DWORD 100
 
 .code
@@ -40,7 +43,19 @@ readInput:
 
 doSpin: 
 	sub balance, 10
-	jmp waitKey           ;temp jump to keep the loop alive
+	mov ecx, 5
+	mov esi, 0
+
+spinEach:
+	mov eax, 5
+	call RandomRange
+	mov spinRandom[esi], al
+	movzx ebx, al
+	mov dl, symbolList[ebx]
+	mov spinResult[esi], dl
+	inc esi
+	loop spinEach
+	jmp waitKey
 
 exitGame:
     exit
