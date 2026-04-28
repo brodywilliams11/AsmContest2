@@ -92,6 +92,36 @@ countFreq:
 	inc freq[eax]
 	inc esi
 	loop countFreq
+	mov ecx, 5
+	mov esi, 0
+
+evalLoop:
+	mov al, freq[esi]
+	cmp al, 2
+	je isPair
+	cmp al, 3
+	je isTriple
+	cmp al, 4
+	je isQuad
+	cmp al, 5
+	je isAllFive
+	jmp nextEval
+
+isPair:
+	inc pairs
+	jmp nextEval
+isTriple:
+	inc triples
+	jmp nextEval
+isQuad:
+	inc quads
+	jmp nextEval
+isAllFive:
+	inc allFive
+
+nextEval:
+	inc esi
+	loop evalLoop
 	jmp waitKey
 
 exitGame:
