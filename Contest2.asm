@@ -8,6 +8,11 @@ symbolList BYTE "AKQJT"
 spinRandom BYTE 5 DUP(?)
 spinResult BYTE 5 DUP(?)
 balance DWORD 100
+freq BYTE 5 DUP(0)
+pairs BYTE 0
+triples BYTE 0
+quads BYTE 0
+allFive BYTE 0
 
 .code
 main PROC
@@ -67,6 +72,18 @@ printLoop:
 	inc edx
 	loop printLoop
 	call Crlf
+	
+	mov pairs, 0
+	mov triples, 0
+	mov quads, 0
+	mov allFive, 0
+	mov ecx, 5
+	mov esi, 0
+
+clearFreq:
+	mov freq[esi], 0
+	inc esi
+	loop clearFreq
 	jmp waitKey
 
 exitGame:
