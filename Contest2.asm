@@ -84,6 +84,14 @@ clearFreq:
 	mov freq[esi], 0
 	inc esi
 	loop clearFreq
+	mov ecx, 5
+	mov esi, 0
+
+countFreq:
+	movzx eax, spinRandom[esi]
+	inc freq[eax]
+	inc esi
+	loop countFreq
 	jmp waitKey
 
 exitGame:
