@@ -78,6 +78,8 @@ spinEach:	;generates a random symbol for each of the 5 slots in the slot machine
 	mov spinResult[esi], dl
 	inc esi
 	loop spinEach
+	mov eax, red + (black * 16)
+	call SetTextColor
 	mov edx, OFFSET spinResult
 	mov ecx, 5
 
@@ -88,6 +90,8 @@ printLoop:	;prints the symbols on the screen based on what was rolled in spinEac
 	call WriteChar
 	inc edx
 	loop printLoop
+	mov eax, white + (black * 16)
+	call SetTextColor
 	call Crlf
 	
 	mov pairs, 0
