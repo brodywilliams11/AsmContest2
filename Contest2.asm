@@ -15,7 +15,7 @@ balanceMsg BYTE "Current Balance: $",0
 outOfMoneyMsg BYTE "You are out of money! Game Over.", 0
 
 winAllFiveMsg BYTE "5 of a Kind! GRAND PRIZE! You win $1000.", 0
-winQuadsMsg BYTE "4 of a Kind! You win $50.", 0
+winQuadsMsg BYTE "4 of a Kind! You win $100.", 0
 winTripleMsg BYTE "3 of a Kind! You win $10.", 0
 winFullHouseMsg BYTE "Full House! You win $25.", 0
 winTwoPairMsg BYTE "2 Pair! You win $5.", 0
@@ -172,7 +172,7 @@ payoutAllFive:	;5 of a kind payout
 	call Crlf
 	jmp waitKey
 payoutQuads:	;4 of a kind payout
-	add balance, 50
+	add balance, 100
 	mov edx, OFFSET winQuadsMsg
 	call WriteString
 	call Crlf
