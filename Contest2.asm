@@ -4,6 +4,10 @@ INCLUDE Irvine32.inc
 rulesMsg BYTE "Press SPACE to spin ($10) or E to exit ",0
 balanceMsg BYTE "Current Balance: $",0
 outOfMoneyMsg BYTE "You are out of money! Game Over.", 0
+
+winAllFiveMsg BYTE "5 of a Kind! GRAND PRIZE! You win $1000.", 0
+winQuadsMsg BYTE "4 of a Kind! you win $50.", 0
+
 symbolList BYTE "AKQJT"
 spinRandom BYTE 5 DUP(?)
 spinResult BYTE 5 DUP(?)
@@ -122,6 +126,22 @@ isAllFive:
 nextEval:
 	inc esi
 	loop evalLoop
+	cmp allFive, 1
+	je payoutAllFive
+	cmp quads, 1
+	je payoutQuads
+	jmp waitKey
+payoutAllFive:
+	add balance, 1000
+	mov edx, OFFSET winAllFiveMsg
+	call WriteString
+	call Crlf
+	jmp waitKey
+payoutQuads:
+	add balance, 50
+	mov edx, OFFSET winQuadsMsg
+	call WriteString
+	call Crlf
 	jmp waitKey
 
 exitGame:
