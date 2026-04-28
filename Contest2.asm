@@ -32,7 +32,7 @@ main PROC
     call Crlf
 
 waitKey: 
-	cmp balance, 5
+	cmp balance, 10
 	jge canPlay
 	mov edx, OFFSET outOfMoneyMsg
 	call WriteString
@@ -196,6 +196,8 @@ payoutPair:
 	jmp waitKey
 
 exitGame:
-    exit
+    call Crlf
+	call WaitMsg
+	exit
 main ENDP
 END main
