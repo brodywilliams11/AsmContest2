@@ -33,14 +33,14 @@ quads BYTE 0
 allFive BYTE 0
 
 .code
-main PROC
+main PROC	;prints the game rules at the start of the game
     call Randomize
     mov edx, OFFSET rulesMsg
     call WriteString
     call Crlf
     call Crlf
 
-waitKey: 
+waitKey:	;checks if balance is enough to do another spin, otherwise prints out of money msg
 	cmp balance, 10
 	jge canPlay
 	mov edx, OFFSET outOfMoneyMsg
@@ -48,14 +48,14 @@ waitKey:
 	call Crlf
 	jmp exitGame
 
-canPlay:
+canPlay:	;if balance is greater than 10 (the spin amount) the game will run
 	mov edx, OFFSET balanceMsg
 	call WriteString
 	mov eax, balance
 	call WriteDec
 	call Crlf
 
-readInput: 
+readInput:	;reads player input for space to spin and e to exit
 	call ReadKey
 	cmp al, ' '
 	je doSpin
@@ -64,12 +64,12 @@ readInput:
 	je exitGame
 	jmp readInput
 
-doSpin: 
+doSpin:		;subtracts 10 from the balance if the player spins (presses space)
 	sub balance, 10
 	mov ecx, 5
 	mov esi, 0
 
-spinEach:
+spinEach:	;generates a random symbol for each of the 5 slots in the slot machine
 	mov eax, 5
 	call RandomRange
 	mov spinRandom[esi], al
@@ -78,11 +78,10 @@ spinEach:
 	mov spinResult[esi], dl
 	inc esi
 	loop spinEach
-	
 	mov edx, OFFSET spinResult
 	mov ecx, 5
 
-printLoop:
+printLoop:	;prints the symbols on the screen based on what was rolled in spinEach
 	mov al, [edx]
 	call WriteChar
 	mov al, ' '
@@ -98,14 +97,14 @@ printLoop:
 	mov ecx, 5
 	mov esi, 0
 
-clearFreq:
+clearFreq:	;resets freq array from previous spin
 	mov freq[esi], 0
 	inc esi
 	loop clearFreq
 	mov ecx, 5
 	mov esi, 0
 
-countFreq:
+countFreq:	;incremants the randomly generated symbols based on how many of each was found
 	movzx eax, spinRandom[esi]
 	inc freq[eax]
 	inc esi
@@ -113,7 +112,7 @@ countFreq:
 	mov ecx, 5
 	mov esi, 0
 
-evalLoop:
+evalLoop:	;looks at freq array to see if any symbol appeared, 2,3,4, or 5 times in the spin
 	mov al, freq[esi]
 	cmp al, 2
 	je isPair
@@ -125,19 +124,19 @@ evalLoop:
 	je isAllFive
 	jmp nextEval
 
-isPair:
+isPair:	;pair logic
 	inc pairs
 	jmp nextEval
-isTriple:
+isTriple:	;3 of a kind logic
 	inc triples
 	jmp nextEval
-isQuad:
+isQuad:		;4 of a kind logic
 	inc quads
 	jmp nextEval
-isAllFive:
+isAllFive:	;5 of a kind logic 
 	inc allFive
 
-nextEval:
+nextEval:	;checks what case happens for each spin the jumps to that cases payout
 	inc esi
 	loop evalLoop
 	cmp allFive, 1
@@ -150,53 +149,53 @@ nextEval:
 	je payoutFullHouse
 	jmp payoutTriple
 
-checkPairs:
+checkPairs:	;logic for 2 pair, 1 pair, and no pair 
 	cmp pairs, 2
 	je payoutTwoPair
 	cmp pairs, 1
 	je payoutPair
-	mov edx, OFFSET loseMsg
+	mov edx, OFFSET loseMsg		;if no pairs at all lose message is printed
 	call WriteString
 	call Crlf
 	call Crlf	
 	jmp waitKey
 
-payoutAllFive:
+payoutAllFive:	;5 of a kind payout
 	add balance, 1000
 	mov edx, OFFSET winAllFiveMsg
 	call WriteString
 	call Crlf
 	call Crlf
 	jmp waitKey
-payoutQuads:
+payoutQuads:	;4 of a kind payout
 	add balance, 50
 	mov edx, OFFSET winQuadsMsg
 	call WriteString
 	call Crlf
 	call Crlf
 	jmp waitKey
-payoutFullHouse:
+payoutFullHouse:	;full house payout
 	add balance, 25
 	mov edx, OFFSET winFullHouseMsg
 	call WriteString
 	call Crlf
 	call Crlf
 	jmp waitKey
-payoutTriple:
+payoutTriple:	;3 of a kind payout
 	add balance, 10
 	mov edx, OFFSET winTripleMsg
 	call WriteString
 	call Crlf
 	call Crlf
 	jmp waitKey
-payoutTwoPair:
+payoutTwoPair:	;2 pair payout
 	add balance, 5
 	mov edx, OFFSET winTwoPairMsg
 	call WriteString
 	call Crlf
 	call Crlf
 	jmp waitKey
-payoutPair:
+payoutPair:		;1 pair payout
 	add balance, 1
 	mov edx, OFFSET winPairMsg
 	call WriteString
@@ -204,7 +203,7 @@ payoutPair:
 	call Crlf
 	jmp waitKey
 
-exitGame:
+exitGame:	;exits with a wait message so the program doesn't close instantly
     call Crlf
 	call WaitMsg
 	exit
