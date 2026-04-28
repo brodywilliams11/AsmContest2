@@ -1,3 +1,12 @@
+;	Brody Williams
+;	Slot Machine Game
+;	Assembly Contest 2
+;	
+;	Run game through Visual Studio
+;	Given $100 to play with
+;	Press space to spin the Slot Machine ($10 per spin)
+;	Press E to exit the game
+
 INCLUDE Irvine32.inc
 
 .data
