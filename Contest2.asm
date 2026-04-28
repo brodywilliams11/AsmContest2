@@ -8,7 +8,10 @@ outOfMoneyMsg BYTE "You are out of money! Game Over.", 0
 winAllFiveMsg BYTE "5 of a Kind! GRAND PRIZE! You win $1000.", 0
 winQuadsMsg BYTE "4 of a Kind! You win $50.", 0
 winTripleMsg BYTE "3 of a Kind! You win $15.", 0
-winFullHouseMsg BYTE "Full House! you win $25.", 0
+winFullHouseMsg BYTE "Full House! You win $25.", 0
+winTwoPairMsg BYTE "2 Pair! You win $10.", 0
+winPairMsg BYTE "1 Pair! You win $5.", 0
+loseMsg BYTE "Nothing matches! You lose.", 0
 
 symbolList BYTE "AKQJT"
 spinRandom BYTE 5 DUP(?)
@@ -139,6 +142,14 @@ nextEval:
 	jmp payoutTriple
 
 checkPairs:
+	cmp pairs, 2
+	je payoutTwoPair
+	cmp pairs, 1
+	je payoutPair
+	mov edx, OFFSET loseMsg
+	call WriteString
+	call Crlf
+	call Crlf	
 	jmp waitKey
 
 payoutAllFive:
@@ -146,11 +157,13 @@ payoutAllFive:
 	mov edx, OFFSET winAllFiveMsg
 	call WriteString
 	call Crlf
+	call Crlf
 	jmp waitKey
 payoutQuads:
 	add balance, 50
 	mov edx, OFFSET winQuadsMsg
 	call WriteString
+	call Crlf
 	call Crlf
 	jmp waitKey
 payoutFullHouse:
@@ -158,11 +171,27 @@ payoutFullHouse:
 	mov edx, OFFSET winFullHouseMsg
 	call WriteString
 	call Crlf
+	call Crlf
 	jmp waitKey
 payoutTriple:
 	add balance, 15
 	mov edx, OFFSET winTripleMsg
 	call WriteString
+	call Crlf
+	call Crlf
+	jmp waitKey
+payoutTwoPair:
+	add balance, 10
+	mov edx, OFFSET winTwoPairMsg
+	call WriteString
+	call Crlf
+	call Crlf
+	jmp waitKey
+payoutPair:
+	add balance, 5
+	mov edx, OFFSET winPairMsg
+	call WriteString
+	call Crlf
 	call Crlf
 	jmp waitKey
 
