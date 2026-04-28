@@ -55,6 +55,18 @@ spinEach:
 	mov spinResult[esi], dl
 	inc esi
 	loop spinEach
+	
+	mov edx, OFFSET spinResult
+	mov ecx, 5
+
+printLoop:
+	mov al, [edx]
+	call WriteChar
+	mov al, ' '
+	call WriteChar
+	inc edx
+	loop printLoop
+	call Crlf
 	jmp waitKey
 
 exitGame:
