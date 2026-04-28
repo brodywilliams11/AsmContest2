@@ -6,7 +6,9 @@ balanceMsg BYTE "Current Balance: $",0
 outOfMoneyMsg BYTE "You are out of money! Game Over.", 0
 
 winAllFiveMsg BYTE "5 of a Kind! GRAND PRIZE! You win $1000.", 0
-winQuadsMsg BYTE "4 of a Kind! you win $50.", 0
+winQuadsMsg BYTE "4 of a Kind! You win $50.", 0
+winTripleMsg BYTE "3 of a Kind! You win $15.", 0
+winFullHouseMsg BYTE "Full House! you win $25.", 0
 
 symbolList BYTE "AKQJT"
 spinRandom BYTE 5 DUP(?)
@@ -130,7 +132,15 @@ nextEval:
 	je payoutAllFive
 	cmp quads, 1
 	je payoutQuads
+	cmp triples, 1
+	jne checkPairs
+	cmp pairs, 1
+	je payoutFullHouse
+	jmp payoutTriple
+
+checkPairs:
 	jmp waitKey
+
 payoutAllFive:
 	add balance, 1000
 	mov edx, OFFSET winAllFiveMsg
@@ -140,6 +150,18 @@ payoutAllFive:
 payoutQuads:
 	add balance, 50
 	mov edx, OFFSET winQuadsMsg
+	call WriteString
+	call Crlf
+	jmp waitKey
+payoutFullHouse:
+	add balance, 25
+	mov edx, OFFSET winFullHouseMsg
+	call WriteString
+	call Crlf
+	jmp waitKey
+payoutTriple:
+	add balance, 15
+	mov edx, OFFSET winTripleMsg
 	call WriteString
 	call Crlf
 	jmp waitKey
